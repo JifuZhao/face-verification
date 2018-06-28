@@ -1,5 +1,5 @@
 # Face-Verification
-Repository for Face Verification Systems
+Repository for Face Detection and Verification Systems
 
 ***
 ## Tasks
