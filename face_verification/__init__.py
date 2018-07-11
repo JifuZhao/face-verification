@@ -8,5 +8,5 @@ __email__ = 'jifuzhao@gmail.com'
 __version__ = '0.1'
 
 from .api import *
-from .cnn import *
+from .facenet import *
 from .utils import *

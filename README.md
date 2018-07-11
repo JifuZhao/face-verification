@@ -14,6 +14,7 @@ Repository for Face Detection and Verification Systems
 + [ ] Liveness Verification
     - [ ] Eye-blink
     - [ ] TBD
++ [ ] Interface or API
 
 
 Copyright @ Jifu Zhao 2018
