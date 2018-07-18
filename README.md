@@ -3,9 +3,9 @@ Repository for Face Detection and Verification Systems
 
 ***
 ## Tasks
-+ [ ] Face Detection
++ [x] Face Detection
     - [x] Haar Cascade Classifier
-    - [ ] LBP Classifier
+    - [x] LBP Classifier (not actually implemented)
 + [ ] Face Alignment
     - [ ] TBD
 + [ ] Face Verification

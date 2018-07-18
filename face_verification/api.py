@@ -25,3 +25,10 @@ def cascade_detector(image, xml=xml, scale_factor=1.3, min_neighbors=5):
         raise ValueError('Error, multiple faces are found.')
 
     return faces
+
+def load_model():
+    """ load pre-trained CNN models """
+    pass
+
+def prediction(model, image):
+    """ make prediction using the pretrained model """
