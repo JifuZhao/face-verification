@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-""" Helper functions """
+""" unitity functions """
 
 import cv2 as cv
 import matplotlib.pyplot as plt
