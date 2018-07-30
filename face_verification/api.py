@@ -26,9 +26,11 @@ def cascade_detector(image, xml=xml, scale_factor=1.3, min_neighbors=5):
 
     return faces
 
+
 def load_model():
     """ load pre-trained CNN models """
     pass
+
 
 def prediction(model, image):
     """ make prediction using the pretrained model """

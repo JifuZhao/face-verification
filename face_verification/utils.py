@@ -12,13 +12,16 @@ def read_image(path):
     """
     return cv.imread(path)
 
+
 def BGR2RGB(image):
     """ function to transform image from BGR into RBG format """
     return cv.cvtColor(image, cv.COLOR_BGR2RGB)
 
+
 def BGR2Gray(image):
     """ function to transofrm image from BGR into Gray format """
     return cv.cvtColor(image, cv.COLOR_BGR2GRAY)
+
 
 def show_image(image, img_format='RGB', figsize=(8, 6)):
     """ function to show image """
@@ -36,6 +39,7 @@ def show_image(image, img_format='RGB', figsize=(8, 6)):
         ax.imshow(image)
     return fig
 
+
 def denote_face(image, face):
     """ function to denote location of face on image """
     img = image.copy()
@@ -43,6 +47,7 @@ def denote_face(image, face):
         cv.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
 
     return img
+
 
 def crop_face(image, face, scale_factor=1.0, target_size=(128, 128)):
     """ crop face at the given positons and resize to target size """
