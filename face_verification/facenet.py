@@ -249,7 +249,7 @@ def basenet(output_shape=128):
     av_pool = AveragePooling2D(pool_size=(3, 3), strides=(1, 1))(inception_5b)
     reshape_layer = Flatten()(av_pool)
     dense_layer = Dense(output_shape, name='dense_layer')(reshape_layer)
-    norm_layer = Lambda(lambda  x: K.l2_normalize(x, axis=1), name='norm_layer')(dense_layer)
+    norm_layer = Lambda(lambda x: K.l2_normalize(x, axis=1), name='norm_layer')(dense_layer)
 
     return Model(inputs=inputs, outputs=norm_layer)
 
@@ -306,7 +306,7 @@ def train_triplet_generator(df, batch_size=128, img_size=(96, 96), seed=42):
             yield [anc_imgs, pos_imgs, neg_imgs], labels
 
 
-def test_triplet_generator(df, batch_size=100, img_size=(96, 96), seed=42):
+def test_triplet_generator(df, batch_size=100, loops=2, img_size=(96, 96), seed=42):
     """ test set triplet images generator, it will generate 1000 pairs """
     names = list(df['name'].unique())
     labels = np.zeros((batch_size, 3, 1), dtype=K.floatx())
@@ -318,7 +318,7 @@ def test_triplet_generator(df, batch_size=100, img_size=(96, 96), seed=42):
         negative_img_path = []
 
         # get the image path list for all images
-        for outer in range(2):
+        for outer in range(loops):
             for i in range(len(names)):
                 pair_list = df[df['name'] == names[i]]['path'].values
                 anchor, positive = np.random.choice(pair_list, size=2, replace=False)
