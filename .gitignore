@@ -8,7 +8,16 @@ __pycache__/
 
 # zip files
 *.tar.gz
-images/*
+*.hdf5
+
+# images
+images/lfw/*
+images/lfw_face/*
+images/vgg2/*
+images/vgg2_face/*
+images/other/*
+images/*.npy
+images/*.csv
 
 # Trivial files
 *.DS_Store
