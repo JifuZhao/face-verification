@@ -5,6 +5,7 @@
 
 import cv2 as cv
 from .utils import read_image, BGR2RGB, BGR2Gray, crop_face
+import tensorflow as tf
 from keras import backend as K
 from keras.models import load_model
 from keras.preprocessing.image import img_to_array
@@ -65,7 +66,7 @@ class face_verify(object):
     
     def _load_model(self):
         """ load the pre-defined cnn model for face verification """
-        self.model = load_model(self.path)
+        self.model = load_model(self.path, custom_objects={'tf': tf})
         
         return
     
