@@ -8,9 +8,9 @@ Repository for Face Detection and Verification Systems
     - [x] LBP Classifier (not actually implemented)
 + [ ] Face Alignment
     - [ ] TBD
-+ [ ] Face Verification
-    - [ ] Base CNN model building and training
-    - [ ] Face verification metric measure
++ [x] Face Verification
+    - [x] Base CNN model building and training
+    - [x] Face verification metric measure
 + [ ] Liveness Verification
     - [ ] Eye-blink
     - [ ] TBD
@@ -26,6 +26,10 @@ Repository for Face Detection and Verification Systems
 * [Face recognition using Tensorflow](https://github.com/davidsandberg/facenet)
 * [The world's simplest facial recognition api for Python and the command line](https://github.com/ageitgey/face_recognition)
 
+
+***
+#### Note
+Limited by computation resources, a relatively small CNN model is used, and the model is only trained for 1,000 epochs. For better performance, please refer to other pre-trained models.
 
 
 Copyright @ Jifu Zhao 2018
