@@ -49,8 +49,7 @@ def triplet_loss(margin=0.2):
     """ wrapper function for triplet loss """
     def loss(y_true, y_pred):
         """ function to calculate the triplet loss"""
-        # define triplet margin
-        margin = K.constant(margin)
+        # define zero constant
         zero = K.constant(0.0)
 
         # get the prediction vector
