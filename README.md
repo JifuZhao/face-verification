@@ -1,5 +1,6 @@
 # Face-Verification
-Repository for Face Detection and Verification Systems
+Repository for Face Detection and Verification Systems 
+- Keras Implementation of [FaceNet Structures](https://arxiv.org/abs/1503.03832)
 
 ***
 ## Tasks

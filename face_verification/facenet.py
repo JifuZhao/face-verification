@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# -------------------------------------------------------------------------
-# Code modified from https://github.com/iwantooxxoox/Keras-OpenFace
-# -------------------------------------------------------------------------
 """ CNN modules for face verification """
 
 import  warnings
@@ -18,6 +15,134 @@ from keras.models import Model
 from keras import backend as K
 from keras.preprocessing.image import load_img, img_to_array
 import tensorflow as tf
+
+
+def train_triplet_generator(df, batch_size=128, img_size=(96, 96)):
+    """ training set triplet images generator """
+    idxs = list(range(len(df)))
+    labels = np.zeros((batch_size, 3, 1), dtype=K.floatx())
+    
+    while True:
+        np.random.shuffle(idxs)
+        anchor_img_path = []
+        positive_img_path = []
+        negative_img_path = []
+
+        # get the image path list for all images
+        for i in range(len(idxs)):
+            # get anchor and positive images
+            pair_path_list = df.loc[idxs[i], 'paths']
+            count = df.loc[idxs[i], 'count']
+            idx1, idx2 = np.random.randint(low=0, high=count, size=2)
+            anchor = pair_path_list[idx1]
+            positive = pair_path_list[idx2]
+            
+            # get negative images
+            if i == len(idxs) - 1:
+                neg_idx = idxs[0]
+            else:
+                neg_idx = idxs[i + 1]
+            neg_path_list = df.loc[neg_idx, 'paths']
+            neg_count = df.loc[neg_idx, 'count']
+            idx3 = np.random.randint(low=0, high=neg_count, size=1)[0]
+            negative = neg_path_list[idx3]
+
+            anchor_img_path.append(anchor)
+            positive_img_path.append(positive)
+            negative_img_path.append(negative)
+
+        # generate batch images
+        for j in range(len(anchor_img_path) // batch_size):
+            batch_anchor_img_path = anchor_img_path[j*batch_size : (j + 1)*batch_size]
+            batch_positive_img_path = positive_img_path[j*batch_size : (j + 1)*batch_size]
+            batch_negative_img_path = negative_img_path[j*batch_size : (j + 1)*batch_size]
+
+            anchor_imgs = []
+            positive_imgs = []
+            negative_imgs = []
+
+            # iteratively read images
+            for k in range(batch_size):
+                tmp_anc_img = load_img(batch_anchor_img_path[k], target_size=img_size)
+                anchor_imgs.append(img_to_array(tmp_anc_img))
+
+                tmp_pos_img = load_img(batch_positive_img_path[k], target_size=img_size)
+                positive_imgs.append(img_to_array(tmp_pos_img))
+
+                tmp_neg_img = load_img(batch_negative_img_path[k], target_size=img_size)
+                negative_imgs.append(img_to_array(tmp_neg_img))
+
+            # transform image list into array
+            anc_imgs = np.array(anchor_imgs, dtype=K.floatx()) / 255.0
+            pos_imgs = np.array(positive_imgs, dtype=K.floatx()) / 255.0
+            neg_imgs = np.array(negative_imgs, dtype=K.floatx()) / 255.0
+
+            yield [anc_imgs, pos_imgs, neg_imgs], labels
+
+
+def test_triplet_generator(df, batch_size=100, loops=2, img_size=(96, 96), seed=42):
+    """ test set triplet images generator, it will generate 1000 pairs """
+    idxs = list(range(len(df)))
+    labels = np.zeros((batch_size, 3, 1), dtype=K.floatx())
+
+    while True:
+        np.random.seed(seed)
+        np.random.shuffle(idxs)
+        anchor_img_path = []
+        positive_img_path = []
+        negative_img_path = []
+
+        # get the image path list for all images
+        for outer in range(loops):
+            for i in range(len(idxs)):
+                # get anchor and positive images
+                pair_path_list = df.loc[idxs[i], 'paths']
+                count = df.loc[idxs[i], 'count']
+                idx1, idx2 = np.random.randint(low=0, high=count, size=2)
+                anchor = pair_path_list[idx1]
+                positive = pair_path_list[idx2]
+                
+                # get negative images
+                if i == len(idxs) - 1:
+                    neg_idx = idxs[0]
+                else:
+                    neg_idx = idxs[i + 1]
+                neg_path_list = df.loc[neg_idx, 'paths']
+                neg_count = df.loc[neg_idx, 'count']
+                idx3 = np.random.randint(low=0, high=neg_count, size=1)[0]
+                negative = neg_path_list[idx3]
+
+                anchor_img_path.append(anchor)
+                positive_img_path.append(positive)
+                negative_img_path.append(negative)
+                    
+        # generate batch images
+        for j in range(len(anchor_img_path) // batch_size):
+            batch_anchor_img_path = anchor_img_path[j*batch_size : (j + 1)*batch_size]
+            batch_positive_img_path = positive_img_path[j*batch_size : (j + 1)*batch_size]
+            batch_negative_img_path = negative_img_path[j*batch_size : (j + 1)*batch_size]
+
+            anchor_imgs = []
+            positive_imgs = []
+            negative_imgs = []
+
+            # iteratively read images
+            for k in range(batch_size):
+                tmp_anc_img = load_img(batch_anchor_img_path[k], target_size=img_size)
+                anchor_imgs.append(img_to_array(tmp_anc_img))
+
+                tmp_pos_img = load_img(batch_positive_img_path[k], target_size=img_size)
+                positive_imgs.append(img_to_array(tmp_pos_img))
+
+                tmp_neg_img = load_img(batch_negative_img_path[k], target_size=img_size)
+                negative_imgs.append(img_to_array(tmp_neg_img))
+
+            # transform image list into array
+            anc_imgs = np.array(anchor_imgs, dtype=K.floatx()) / 255.0
+            pos_imgs = np.array(positive_imgs, dtype=K.floatx()) / 255.0
+            neg_imgs = np.array(negative_imgs, dtype=K.floatx()) / 255.0
+
+            yield [anc_imgs, pos_imgs, neg_imgs], labels
 
 
 def triplet_net(base_model, input_shape=(96, 96, 3)):
@@ -66,6 +191,10 @@ def triplet_loss(margin=0.2):
         return full_loss
     return loss
 
+
+# -----------------------------------------------------------------------------------
+# The following code is modified from https://github.com/iwantooxxoox/Keras-OpenFace
+# -----------------------------------------------------------------------------------
 
 def LRN2D(x):
     """ local response normalization """
@@ -251,131 +380,3 @@ def basenet(output_shape=128):
     norm_layer = Lambda(lambda x: K.l2_normalize(x, axis=1), name='norm_layer')(dense_layer)
 
     return Model(inputs=inputs, outputs=norm_layer)
-
-
-def train_triplet_generator(df, batch_size=128, img_size=(96, 96)):
-    """ training set triplet images generator """
-    idxs = list(range(len(df)))
-    labels = np.zeros((batch_size, 3, 1), dtype=K.floatx())
-    
-    while True:
-        np.random.shuffle(idxs)
-        anchor_img_path = []
-        positive_img_path = []
-        negative_img_path = []
-
-        # get the image path list for all images
-        for i in range(len(idxs)):
-            # get anchor and positive images
-            pair_path_list = df.loc[idxs[i], 'paths']
-            count = df.loc[idxs[i], 'count']
-            idx1, idx2 = np.random.randint(low=0, high=count, size=2)
-            anchor = pair_path_list[idx1]
-            positive = pair_path_list[idx2]
-            
-            # get negative images
-            if i == len(idxs) - 1:
-                neg_idx = idxs[0]
-            else:
-                neg_idx = idxs[i + 1]
-            neg_path_list = df.loc[neg_idx, 'paths']
-            neg_count = df.loc[neg_idx, 'count']
-            idx3 = np.random.randint(low=0, high=neg_count, size=1)[0]
-            negative = neg_path_list[idx3]
-
-            anchor_img_path.append(anchor)
-            positive_img_path.append(positive)
-            negative_img_path.append(negative)
-
-        # generate batch images
-        for j in range(len(anchor_img_path) // batch_size):
-            batch_anchor_img_path = anchor_img_path[j*batch_size : (j + 1)*batch_size]
-            batch_positive_img_path = positive_img_path[j*batch_size : (j + 1)*batch_size]
-            batch_negative_img_path = negative_img_path[j*batch_size : (j + 1)*batch_size]
-
-            anchor_imgs = []
-            positive_imgs = []
-            negative_imgs = []
-
-            # iteratively read images
-            for k in range(batch_size):
-                tmp_anc_img = load_img(batch_anchor_img_path[k], target_size=img_size)
-                anchor_imgs.append(img_to_array(tmp_anc_img))
-
-                tmp_pos_img = load_img(batch_positive_img_path[k], target_size=img_size)
-                positive_imgs.append(img_to_array(tmp_pos_img))
-
-                tmp_neg_img = load_img(batch_negative_img_path[k], target_size=img_size)
-                negative_imgs.append(img_to_array(tmp_neg_img))
-
-            # transform image list into array
-            anc_imgs = np.array(anchor_imgs, dtype=K.floatx()) / 255.0
-            pos_imgs = np.array(positive_imgs, dtype=K.floatx()) / 255.0
-            neg_imgs = np.array(negative_imgs, dtype=K.floatx()) / 255.0
-
-            yield [anc_imgs, pos_imgs, neg_imgs], labels
-
-
-def test_triplet_generator(df, batch_size=100, loops=2, img_size=(96, 96), seed=42):
-    """ test set triplet images generator, it will generate 1000 pairs """
-    idxs = list(range(len(df)))
-    labels = np.zeros((batch_size, 3, 1), dtype=K.floatx())
-
-    while True:
-        np.random.seed(seed)
-        np.random.shuffle(idxs)
-        anchor_img_path = []
-        positive_img_path = []
-        negative_img_path = []
-
-        # get the image path list for all images
-        for outer in range(loops):
-            for i in range(len(idxs)):
-                # get anchor and positive images
-                pair_path_list = df.loc[idxs[i], 'paths']
-                count = df.loc[idxs[i], 'count']
-                idx1, idx2 = np.random.randint(low=0, high=count, size=2)
-                anchor = pair_path_list[idx1]
-                positive = pair_path_list[idx2]
-                
-                # get negative images
-                if i == len(idxs) - 1:
-                    neg_idx = idxs[0]
-                else:
-                    neg_idx = idxs[i + 1]
-                neg_path_list = df.loc[neg_idx, 'paths']
-                neg_count = df.loc[neg_idx, 'count']
-                idx3 = np.random.randint(low=0, high=neg_count, size=1)[0]
-                negative = neg_path_list[idx3]
-
-                anchor_img_path.append(anchor)
-                positive_img_path.append(positive)
-                negative_img_path.append(negative)
-                    
-        # generate batch images
-        for j in range(len(anchor_img_path) // batch_size):
-            batch_anchor_img_path = anchor_img_path[j*batch_size : (j + 1)*batch_size]
-            batch_positive_img_path = positive_img_path[j*batch_size : (j + 1)*batch_size]
-            batch_negative_img_path = negative_img_path[j*batch_size : (j + 1)*batch_size]
-
-            anchor_imgs = []
-            positive_imgs = []
-            negative_imgs = []
-
-            # iteratively read images
-            for k in range(batch_size):
-                tmp_anc_img = load_img(batch_anchor_img_path[k], target_size=img_size)
-                anchor_imgs.append(img_to_array(tmp_anc_img))
-
-                tmp_pos_img = load_img(batch_positive_img_path[k], target_size=img_size)
-                positive_imgs.append(img_to_array(tmp_pos_img))
-
-                tmp_neg_img = load_img(batch_negative_img_path[k], target_size=img_size)
-                negative_imgs.append(img_to_array(tmp_neg_img))
-
-            # transform image list into array
-            anc_imgs = np.array(anchor_imgs, dtype=K.floatx()) / 255.0
-            pos_imgs = np.array(positive_imgs, dtype=K.floatx()) / 255.0
-            neg_imgs = np.array(negative_imgs, dtype=K.floatx()) / 255.0
-
-            yield [anc_imgs, pos_imgs, neg_imgs], labels
