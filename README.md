@@ -51,6 +51,9 @@ Repository for Face Detection and Verification Systems
 #### 4. Performance
 
 
+#### 5. Extention: Face Recognition
+Based on the pre-trained CNN models, face recognition can be performed using the encoded image vectors (in this project, a vector with 128 dimensions). Essentially, it can be performed using K-Nearest Neighbors (KNN) model.
+
 ***
 ### Useful Links:
 * [FaceNet: A Unified Embedding for Face Recognition and Clustering](https://arxiv.org/abs/1503.03832)
