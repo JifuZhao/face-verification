@@ -21,13 +21,16 @@ Repository for Face Detection and Verification Systems
 ## Demo
 
 #### 1. Face Detection --> [OpenCV Haar Feature-based Cascade Classifiers](https://docs.opencv.org/3.3.0/d7/d8b/tutorial_py_face_detection.html)
-+ Sample Input Images <br/>
+* Sample Input Images <br/>
 <img src="./results/input_images.png" alt="Sample" style="width: 600px;"/>
-+ Frontal Face Detection <br/>
+
+* Frontal Face Detection <br/>
 <img src="./results/face_detection.png" alt="Sample" style="width: 600px;"/>
-+ Frontal Face Crop <br/>
+
+* Frontal Face Crop <br/>
 <img src="./results/cropped_faces.png" alt="Sample" style="width: 600px;"/>
-+ Check [Jupyter Notebook](https://github.com/JifuZhao/face-verification/blob/master/5.%20FaceNet%20Application%20Demo.ipynb) for details.
+
+* Check [Jupyter Notebook](https://github.com/JifuZhao/face-verification/blob/master/5.%20FaceNet%20Application%20Demo.ipynb) for details.
 
 #### 2. Base CNN Model for Face Verification
 + Training Dataset: [VGGFace2 Dataset](http://www.robots.ox.ac.uk/~vgg/data/vgg_face2/)
@@ -36,12 +39,12 @@ Repository for Face Detection and Verification Systems
 <!---
 L(a, p, n) = max \{ ||f(a)-f(p)||_2^2  -||f(a)-f(n)||_2^2 + \alpha , 0 \}
 -->
-    + a: anchor image
-    + p: positive image
-    + n: negative image
-    + f(x): CNN model to encode the input image
-    + $\alpha$: margin for triplet <br/>
-<img src="./results/triplet_loss.png" alt="Sample" style="width: 600px;"/>
+    * a: anchor image
+    * p: positive image
+    * n: negative image
+    * f(x): CNN model to encode the input image
+    * $\alpha$: margin for triplet <br/>
+    <img src="./results/triplet_loss.png" alt="Sample" style="width: 500px;"/>
 
 
 #### 3. Face Verification
