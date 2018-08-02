@@ -8,7 +8,8 @@ __pycache__/
 
 # zip files
 *.tar.gz
-*.hdf5
+*weights.*
+#*.hdf5
 
 # images
 images/lfw/*
