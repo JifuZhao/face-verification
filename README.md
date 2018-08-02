@@ -36,9 +36,6 @@ Repository for Face Detection and Verification Systems
 + Training Dataset: [VGGFace2 Dataset](http://www.robots.ox.ac.uk/~vgg/data/vgg_face2/)
 + Triplet Loss <br/>
 ![equation](https://latex.codecogs.com/gif.latex?%5Cdpi%7B150%7D%20%5Cbg_white%20L%28a%2C%20p%2C%20n%29%20%3D%20max%20%5C%7B%20%7C%7Cf%28a%29-f%28p%29%7C%7C_2%5E2%20-%7C%7Cf%28a%29-f%28n%29%7C%7C_2%5E2%20&plus;%20%5Calpha%20%2C%200%20%5C%7D)
-<!---
-L(a, p, n) = max \{ ||f(a)-f(p)||_2^2  -||f(a)-f(n)||_2^2 + \alpha , 0 \}
--->
     * a: anchor image
     * p: positive image
     * n: negative image
