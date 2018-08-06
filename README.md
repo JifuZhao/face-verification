@@ -42,7 +42,7 @@ Repository for Face Detection and Verification Systems
     * n: negative image
     * f(x): CNN model to encode the input image
     * $\alpha$: margin for triplet <br/>
-    <img src="./results/triplet_loss.png" alt="Sample" style="width: 400px;"/>
+    <img src="./results/triplet_loss.png" alt="Sample" style="width: 300px;"/>
 
 
 #### 3. Face Verification
