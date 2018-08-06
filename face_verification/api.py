@@ -4,7 +4,9 @@
 """ API for face detection and verification """
 
 import cv2 as cv
+import numpy as np
 from .utils import read_image, BGR2RGB, BGR2Gray, crop_face
+from .facenet import triplet_loss
 import tensorflow as tf
 from keras import backend as K
 from keras.models import load_model
@@ -33,7 +35,9 @@ def cascade_detector(image, xml=xml, scale_factor=1.3, min_neighbors=5):
 
 class face_verify(object):
     """ class for face verification """
-    def __init__(self, path, xml='./xmls/haarcascade_frontalface_default.xml'):
+    def __init__(self, 
+                 path='./models/facenet-margin-03-final.h5', 
+                 xml='./xmls/haarcascade_frontalface_default.xml'):
         """ initialize the face verification api """
         self.path = path
         self.xml = xml
@@ -42,26 +46,31 @@ class face_verify(object):
     def get_distance(self, path1, path2):
         """ get the distance between two images from path1 and path2 """
         if self.model is None:
-            self._load_model(self.path)
+            self._load_model()
             
         # pre-process the images
         img1 = self._process_image(path1)
         img2 = self._process_image(path2)
         
-        pred1 = self.model.predict(img1)
-        pred2 = self.model.predict(img2)
+        # make predictions
+        imgs = np.array([img1, img2])
+        predictions = self.model.predict(imgs)
+        
+        pred1 = predictions[0]
+        pred2 = predictions[1]
         
         # calculate the Euclidean distance
         distance = np.sqrt(np.sum(np.square(pred1 - pred2)))
         
         return img1, img2, distance
     
-    def verify(self, path1, path2, threshold=0.8):
+    def verify(self, path1, path2, threshold=0.2):
         """ verify whether or not images from path1 and path2 are same person """
         img1, img2, distance = self.get_distance(path1, path2)
         
         if distance < threshold:
             return img1, img2, True
+        
         return img1, img2, False
     
     def _load_model(self):
@@ -83,5 +92,4 @@ class face_verify(object):
         crop_array = np.array(crop_rgb, dtype=K.floatx()) / 255.0
         
         return crop_rgb
-   
 

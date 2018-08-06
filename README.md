@@ -1,6 +1,7 @@
 # Face-Verification
 Repository for Face Detection and Verification Systems 
-- Keras Implementation of [FaceNet Structures](https://arxiv.org/abs/1503.03832)
+- OpenCV [Cascade Classifiers](https://docs.opencv.org/3.3.0/d7/d8b/tutorial_py_face_detection.html) for Face Detection
+- Keras Implementation of [FaceNet](https://arxiv.org/abs/1503.03832) for Face Verification
 
 ***
 ## Tasks
